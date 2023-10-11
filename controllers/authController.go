@@ -3,8 +3,8 @@ package controllers
 import (
 	"awesomeProject/database"
 	"awesomeProject/models"
+	"awesomeProject/util"
 	"fmt"
-	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
@@ -65,12 +65,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer: strconv.Itoa(int(user.Id)),
-		//ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
-	})
-
-	token, err := claims.SignedString([]byte("secret"))
+	token, err := util.GenerateJwt(strconv.Itoa(int(user.Id)))
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
@@ -90,28 +85,14 @@ func Login(c *fiber.Ctx) error {
 	})
 }
 
-type Claims struct {
-	jwt.StandardClaims
-}
-
 func User(c *fiber.Ctx) error {
 	cookie := c.Cookies("jwt")
-	token, err := jwt.ParseWithClaims(cookie, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("secret"), nil
-	})
 
-	if err != nil || !token.Valid {
-		c.Status(fiber.StatusUnauthorized)
-		return c.JSON(fiber.Map{
-			"message": "unathenticated",
-		})
-	}
-
-	claims := token.Claims.(*Claims)
+	id, _ := util.ParseJwt(cookie)
 
 	//claims.Issuer
 	var user models.User
-	database.DB.Where("Id = ?", claims.Issuer).First(&user)
+	database.DB.Where("Id = ?", id).First(&user)
 
 	return c.JSON(user)
 }
