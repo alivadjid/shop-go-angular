@@ -21,3 +21,4 @@
 `go get -u .`
 
 4. Add migrations
+5. Hash password

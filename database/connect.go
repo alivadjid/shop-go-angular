@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func Connect() {
 	const (
 		host     = "localhost"
@@ -27,6 +29,9 @@ func Connect() {
 		panic("Failed to connect to the database: " + err.Error())
 	}
 	fmt.Println(database)
+
+	DB = database
+
 	database.AutoMigrate(&models.User{})
 }
 
