@@ -19,3 +19,5 @@
 3. Add github.com/oxequa/realize/realize
 
 `go get -u .`
+
+4. Add migrations

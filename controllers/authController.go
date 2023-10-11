@@ -6,12 +6,26 @@ import (
 )
 
 func Register(c *fiber.Ctx) error {
-	user := models.User{
-		FirstName: "John",
+	var data map[string]string
+	if err := c.BodyParser(&data); err != nil {
+		return err
 	}
 
-	user.LastName = "Doe344"
+	if data["password"] != data["password_confirm"] {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"message": "Passwords do not match",
+		})
+	}
 
+	user := models.User{
+		FirstName: data["first_name"],
+		LastName:  data["last_name"],
+		Email:     data["email"],
+		Password:  data["password"],
+	}
+
+	//user.LastName = "Doe344"
 	// return c.SendString("Hello, World 👋!")
 	return c.JSON(user)
 }

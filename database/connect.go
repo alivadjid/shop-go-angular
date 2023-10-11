@@ -1,12 +1,10 @@
 package database
 
 import (
-	"database/sql"
+	"awesomeProject/models"
 	"fmt"
-)
-
-import (
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func Connect() {
@@ -18,26 +16,20 @@ func Connect() {
 		dbname   = "angular-go-database"
 	)
 
-	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+	//connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+	//	host, port, user, password, dbname)
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable host=%s port=%d", user, password, dbname, host, port)
+	fmt.Println(dsn)
+	//database, err := sql.Open("postgres", connectionString)
+	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
-		panic(err)
+		panic("Failed to connect to the database: " + err.Error())
 	}
-	// defer db.Close()
-	fmt.Println(db)
-
-	n1, n2 := two()
-	fmt.Println(n1, n2)
-
-	err = db.Ping()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Connected to the database!")
+	fmt.Println(database)
+	database.AutoMigrate(&models.User{})
 }
 
-func two() (int, int) {
-	return 3, 5
-}
+//func two() (int, int) {
+//	return 3, 5
+//}
