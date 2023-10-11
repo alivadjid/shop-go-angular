@@ -1,0 +1,22 @@
+# .air.toml
+[build]
+bin = "awesomeProject"  # Replace with your binary name
+cmd = ["awesomeProject"]  # Replace with your binary name
+root = "."  # The root directory of your project
+exclude = []
+include = ["*.go", "templates/**", "locales/**"]  # Include relevant files/directories
+main = ["main.go"]  # The main Go file of your application
+
+[log]
+mode = "file"
+level = "debug"
+show-routes = true
+
+[web]
+address = ":8080"  # The port on which air should run
+web-dir = "web"
+web-addr = ":8081"  # The port for the web interface
+web-ws = false
+web-no-reload = false
+web-no-browser = false
+web-open = true
