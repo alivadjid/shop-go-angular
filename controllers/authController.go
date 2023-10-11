@@ -4,8 +4,11 @@ import (
 	"awesomeProject/database"
 	"awesomeProject/models"
 	"fmt"
+	"github.com/dgrijalva/jwt-go/v4"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
+	"strconv"
+	"time"
 )
 
 func Register(c *fiber.Ctx) error {
@@ -36,6 +39,7 @@ func Register(c *fiber.Ctx) error {
 	// return c.SendString("Hello, World 👋!")
 	return c.JSON(user)
 }
+
 func Login(c *fiber.Ctx) error {
 	var data map[string]string
 
@@ -61,5 +65,27 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(user)
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
+		Issuer: strconv.Itoa(int(user.Id)),
+		//ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+	})
+
+	token, err := claims.SignedString([]byte("secret"))
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	cookie := fiber.Cookie{
+		Name:     "jwt",
+		Value:    token,
+		Expires:  time.Now().Add(time.Hour * 24),
+		HTTPOnly: true,
+	}
+
+	c.Cookie(&cookie)
+
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
 }
