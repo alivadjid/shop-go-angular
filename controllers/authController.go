@@ -107,9 +107,25 @@ func User(c *fiber.Ctx) error {
 		})
 	}
 
-	claims := token.Claims
+	claims := token.Claims.(*Claims)
 
 	//claims.Issuer
+	var user models.User
+	database.DB.Where("Id = ?", claims.Issuer).First(&user)
 
-	return c.JSON(claims)
+	return c.JSON(user)
+}
+
+func Logout(c *fiber.Ctx) error {
+	cookie := fiber.Cookie{
+		Name:     "jwt",
+		Value:    "",
+		Expires:  time.Now().Add(-time.Hour),
+		HTTPOnly: true,
+	}
+	c.Cookie(&cookie)
+
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
 }
