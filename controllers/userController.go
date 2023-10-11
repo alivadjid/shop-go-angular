@@ -4,6 +4,7 @@ import (
 	"awesomeProject/database"
 	"awesomeProject/models"
 	"github.com/gofiber/fiber/v2"
+	"strconv"
 )
 
 func AllUsers(c *fiber.Ctx) error {
@@ -24,6 +25,18 @@ func CreateUser(c *fiber.Ctx) error {
 	user.SetPassword("1234")
 
 	database.DB.Create(&user)
+
+	return c.JSON(user)
+}
+
+func GetUser(c *fiber.Ctx) error {
+	id, _ := strconv.Atoi(c.Params("id"))
+
+	user := models.User{
+		Id: uint(id),
+	}
+
+	database.DB.Find(&user)
 
 	return c.JSON(user)
 }
