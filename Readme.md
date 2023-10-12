@@ -22,3 +22,22 @@
 
 4. Add migrations
 5. Hash password
+6. Roles
+7. Permissions
+
+   Add to db.permissions
+
+| id | name          |
+|----|---------------|
+| 1  | view_users    |
+| 2  | edit_users    |
+| 3  | view_roles    |
+| 4  | edit_roles    |
+| 5  | view_products |
+| 6  | edit_products |
+| 7  | view_orders   |
+| 8  | edit_orders   |
+
+many to many to role
+
+with gorm add table to do it `role_permissions`
