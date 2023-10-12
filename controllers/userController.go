@@ -23,6 +23,7 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 
 	user.SetPassword("1234")
+	// TODO error handler if no role_id
 
 	database.DB.Create(&user)
 
