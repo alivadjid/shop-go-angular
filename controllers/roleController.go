@@ -58,19 +58,43 @@ func GetRole(c *fiber.Ctx) error {
 		Id: uint(id),
 	}
 
-	database.DB.Find(&role)
+	database.DB.Preload("Permissions").Find(&role)
 
 	return c.JSON(role)
 }
 
 func UpdateRole(c *fiber.Ctx) error {
 	id, _ := strconv.Atoi(c.Params("id"))
-	role := models.Role{
-		Id: uint(id),
+	//role := models.Role{
+	//	Id: uint(id),
+	//}
+	var roleDTO fiber.Map
+	if err := c.BodyParser(&roleDTO); err != nil {
+		return err
 	}
 
-	if err := c.BodyParser(&role); err != nil {
-		return err
+	list := roleDTO["permissions"].([]interface{})
+
+	permissions := make([]models.Permission, len(list))
+
+	for i, permissionId := range list {
+		id, _ := strconv.Atoi(permissionId.(string))
+
+		permissions[i] = models.Permission{
+			Id: uint(id),
+		}
+	}
+	var result interface{}
+
+	database.DB.Table("role_permissions").Where("role_id= ?", id).Delete(result)
+	//if err := database.DB.Table("role_permissions").Where(deletionConditions).Delete(&models.Permission{}).Error; err != nil {
+	//	return err
+	//}
+
+	role := models.Role{
+		Id:          uint(id),
+		Name:        roleDTO["name"].(string),
+		Permissions: permissions,
 	}
 
 	database.DB.Model(&role).Updates(role)
