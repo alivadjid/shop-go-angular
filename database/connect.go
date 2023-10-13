@@ -32,7 +32,7 @@ func Connect() {
 
 	DB = database
 
-	migrateError := database.AutoMigrate(&models.User{}, &models.Role{}, &models.Permission{})
+	migrateError := database.AutoMigrate(&models.User{}, &models.Role{}, &models.Permission{}, &models.Product{})
 
 	if migrateError != nil {
 		panic("Failed to migrate")
