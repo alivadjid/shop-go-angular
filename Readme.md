@@ -46,3 +46,7 @@
 many to many to role
 
 with gorm add table to do it `role_permissions`
+
+update roles
+
+products
