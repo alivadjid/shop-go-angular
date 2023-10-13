@@ -26,7 +26,7 @@ func CreateUser(c *fiber.Ctx) error {
 	// TODO error handler if no role_id
 
 	database.DB.Create(&user)
-
+	// TODO don't return full role after create user
 	return c.JSON(user)
 }
 
