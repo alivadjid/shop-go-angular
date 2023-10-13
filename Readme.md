@@ -1,3 +1,8 @@
+# Products site
+<hr/>
+
+### stack: Go + Angular
+
 `https://github.com/gofiber/fiber`
 
 `go get github.com/gofiber/fiber/v2`
