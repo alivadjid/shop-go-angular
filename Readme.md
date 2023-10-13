@@ -50,3 +50,5 @@ with gorm add table to do it `role_permissions`
 update roles
 
 products
+
+Should create better pagination
