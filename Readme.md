@@ -55,3 +55,4 @@ Should create better pagination
 
 Uploading images and get upload image
 
+Orders. Model. Example of using gorm.Model for common keys as Id, CreatedAt, UpdatedAt, 
