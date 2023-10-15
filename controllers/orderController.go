@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"awesomeProject/database"
+	"awesomeProject/middlewares"
 	"awesomeProject/models"
 	"encoding/csv"
 	"github.com/gofiber/fiber/v2"
@@ -10,12 +11,20 @@ import (
 )
 
 func AllOrders(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorized(c, "orders"); err != nil {
+		return err
+	}
+
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 
 	return c.JSON(models.Paginate(database.DB, &models.Order{}, page))
 }
 
 func Export(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorized(c, "orders"); err != nil {
+		return err
+	}
+
 	filePath := "./csv/orders.csv"
 
 	if err := CreateFile(filePath); err != nil {
@@ -26,6 +35,7 @@ func Export(c *fiber.Ctx) error {
 }
 
 func CreateFile(filePath string) error {
+
 	file, err := os.Create(filePath)
 
 	if err != nil {
@@ -84,6 +94,9 @@ type Sales struct {
 }
 
 func Chart(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorized(c, "orders"); err != nil {
+		return err
+	}
 
 	var sales []Sales
 

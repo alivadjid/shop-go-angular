@@ -79,4 +79,5 @@ FROM orders o
 GROUP BY date
 ```
 
+Permission middleware
 
