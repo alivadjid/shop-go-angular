@@ -17,8 +17,10 @@ func Paginate(db *gorm.DB, entity Entity, page int) fiber.Map {
 	//db.Offset(offset).Limit(limit).Find(&products)
 
 	data := entity.Take(db, limit, offset)
+	//fmt.Println(data)
 	total := entity.Count(db)
-	db.Model(&Product{}).Count(&total)
+	//db.Model(&Product{}).Count(&total)
+	db.Model(entity).Count(&total)
 
 	return fiber.Map{
 		"data": data,
