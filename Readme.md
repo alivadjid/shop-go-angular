@@ -57,3 +57,6 @@ Uploading images and get upload image
 
 Orders. Model. Example of using gorm.Model for common keys as Id, CreatedAt, UpdatedAt, 
 Add get all orders
+
+Ignore columns. Order, calculate total, one name. Order name not in db. Total not in db.
+
