@@ -60,3 +60,23 @@ Orders. Model. Example of using gorm.Model for common keys as id, CreatedAt, Upd
 Ignore columns. Order, calculate total, one name. Order name not in db. Total not in db.
 
 Export orders as csv
+
+RAW Sql. Goland -> Query Console.
+
+don't work
+```postgresql
+SELECT to_date(o.created_at::TEXT,'YYYY-MM-DD') as date , SUM(oi.price * oi.quantity) as sum
+FROM orders o
+        JOIN order_items oi on o.id = oi.order_id
+GROUP BY date
+```
+
+work. show date in formatting view
+```postgresql
+SELECT to_date(o.created_at::TEXT,'YYYY-MM-DD') as date , SUM(oi.price * oi.quantity) as sum
+FROM orders o
+        JOIN order_items oi on o.id = oi.order_id
+GROUP BY date
+```
+
+
